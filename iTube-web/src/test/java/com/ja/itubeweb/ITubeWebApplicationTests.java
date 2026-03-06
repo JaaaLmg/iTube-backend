@@ -1,13 +1,11 @@
-package com.ja.itubeadmin;
+package com.ja.itubeweb;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ITubeAdminApplicationTests {
-
+public class ITubeWebApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }
