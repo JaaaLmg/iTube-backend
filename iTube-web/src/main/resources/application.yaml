@@ -9,7 +9,7 @@ spring:
   application:
     name: iTube-web
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/easylive?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/itube?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -33,13 +33,13 @@ spring:
         max-idle: 10
         min-idle: 0
     timeout: 2000
-#mybatis ??????
+#mybatis 大小写转驼峰
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
 
 project:
-  folder: c:/webser/easylive/
+  folder: d:/webserver/itube/
 log:
   root:
     level: debug
