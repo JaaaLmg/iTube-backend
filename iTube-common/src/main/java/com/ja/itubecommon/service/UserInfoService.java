@@ -1,5 +1,6 @@
 package com.ja.itubecommon.service;
 
+import com.ja.itubecommon.entity.dto.TokenUserInfoDto;
 import com.ja.itubecommon.entity.po.UserInfo;
 import com.ja.itubecommon.entity.query.UserInfoQuery;
 import com.ja.itubecommon.entity.vo.PaginationResultVO;
@@ -99,4 +100,5 @@ public interface UserInfoService {
 
 	void register(String email, String nickname, String password) throws BusinessException;
 
+	TokenUserInfoDto login(String email, String password, String ip) throws BusinessException;
 }

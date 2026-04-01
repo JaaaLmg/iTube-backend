@@ -2,6 +2,7 @@ package com.ja.itubeweb.controller;
 
 import com.ja.itubecommon.component.RedisComponent;
 import com.ja.itubecommon.entity.constants.Constants;
+import com.ja.itubecommon.entity.dto.TokenUserInfoDto;
 import com.ja.itubecommon.entity.vo.ResponseVO;
 import com.ja.itubecommon.exception.BusinessException;
 import com.ja.itubecommon.service.UserInfoService;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -58,5 +61,45 @@ public class AccountController extends BaseController {
 		} finally {
 			redisComponent.deleteVerifyCode(verifyCodeKey);
 		}
+	}
+
+	@RequestMapping("login")
+	public  ResponseVO login(HttpServletResponse response,
+							 @NotEmpty @Email String email,
+							 @NotEmpty String password,		// 前端传回的密码需要是MD5加密后的结果
+							 @NotEmpty String verifyCodeKey,
+							 @NotEmpty String verifyCode) throws BusinessException {
+		try {
+			if(!verifyCode.equalsIgnoreCase(redisComponent.getVerifyCode(verifyCodeKey))) {
+				throw new BusinessException("验证码错误");
+			}
+			String ip = getIpAddr();
+			TokenUserInfoDto tokenUserInfoDto = userInfoService.login(email, password, ip);
+			saveToken2Cookie(response, tokenUserInfoDto.getToken());
+
+			return getSuccessResponseVO(tokenUserInfoDto);
+		} finally {
+			redisComponent.deleteVerifyCode(verifyCodeKey);
+		}
+	}
+
+	@RequestMapping("autoLogin")
+	public ResponseVO autoLogin(HttpServletResponse response) {
+		// 前端请求需要在Header中直接携带token字段！
+		TokenUserInfoDto tokenUserInfoDto = getTokenUserInfoDto();
+		if(null == tokenUserInfoDto) {
+			return getSuccessResponseVO(null);
+		}
+		if(tokenUserInfoDto.getExpireAt() - System.currentTimeMillis() < Constants.REDIS_KEY_EXPIRE_ONE_DAY) {
+			redisComponent.saveTokenInfo(tokenUserInfoDto);
+			saveToken2Cookie(response, tokenUserInfoDto.getToken());
+		}
+		return getSuccessResponseVO(tokenUserInfoDto);
+	}
+
+	@RequestMapping("logout")
+	public ResponseVO logout(HttpServletResponse response) {
+		cleanTokenFromCookie(response);
+		return getSuccessResponseVO(null);
 	}
 }

@@ -1,6 +1,8 @@
 package com.ja.itubecommon.service.impl;
 
+import com.ja.itubecommon.component.RedisComponent;
 import com.ja.itubecommon.entity.constants.Constants;
+import com.ja.itubecommon.entity.dto.TokenUserInfoDto;
 import com.ja.itubecommon.entity.enums.UserSexEnum;
 import com.ja.itubecommon.entity.enums.UserStatusEnum;
 import com.ja.itubecommon.exception.BusinessException;
@@ -11,6 +13,7 @@ import com.ja.itubecommon.entity.query.UserInfoQuery;
 import com.ja.itubecommon.entity.query.SimplePage;
 import com.ja.itubecommon.entity.enums.PageSize;
 import com.ja.itubecommon.entity.vo.PaginationResultVO;
+import com.ja.itubecommon.utils.CopyTools;
 import com.ja.itubecommon.utils.StringTools;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
@@ -26,6 +29,9 @@ import java.util.List;
 public class UserInfoServiceImpl implements UserInfoService {
 	@Resource
 	private UserInfoMapper<UserInfo,UserInfoQuery> userInfoMapper;
+
+	@Resource
+	private RedisComponent redisComponent;
 
 	/**
 	 * 根据查询条件查询列表
@@ -185,4 +191,22 @@ public class UserInfoServiceImpl implements UserInfoService {
 		this.userInfoMapper.insert(userInfo);
 	}
 
+	@Override
+	public TokenUserInfoDto login(String email, String password, String ip) throws BusinessException {
+		UserInfo userInfo = this.userInfoMapper.selectByEmail(email);
+		if(null == userInfo || !userInfo.getPassword().equals(password)) {
+			throw new BusinessException("账号或密码错误");
+		}
+		if(userInfo.getStatus() == UserStatusEnum.DISABLED.getStatus()) {
+			throw new BusinessException("账号已被禁用");
+		}
+		UserInfo updateUserInfo = new UserInfo();
+		updateUserInfo.setLastLoginTime(new Date());
+		updateUserInfo.setLastLoginIp(ip);
+		this.userInfoMapper.updateByEmail(updateUserInfo, email);
+
+		TokenUserInfoDto tokenUserInfoDto = CopyTools.copy(userInfo, TokenUserInfoDto.class);
+		redisComponent.saveTokenInfo(tokenUserInfoDto);
+		return tokenUserInfoDto;
+	}
 }
