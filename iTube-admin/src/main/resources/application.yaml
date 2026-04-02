@@ -46,4 +46,4 @@ log:
     level: debug
 admin:
   account: admin
-  password: admin123
+  password: admin@001
