@@ -42,4 +42,14 @@ public class RedisComponent {
     public void deleteTokenInfo(String token) {
         redisUtils.delete(Constants.REDIS_KEY_TOKEN_WEB + token);
     }
+
+    public void deleteTokenInfo4Admin(String token) {
+        redisUtils.delete(Constants.REDIS_KEY_TOKEN_ADMIN + token);
+    }
+
+    public String saveTokenInfo4Admin(String account) {
+        String token = UUID.randomUUID().toString();
+        redisUtils.setex(Constants.REDIS_KEY_TOKEN_ADMIN + token, account, Constants.REDIS_KEY_EXPIRE_ONE_DAY);
+        return token;
+    }
 }

@@ -9,5 +9,7 @@ public class Constants {
     public static final String REDIS_KEY_PREFIX = "itube:";     // redis key 前缀
     public static final String REDIS_KEY_VERIFY_CODE = REDIS_KEY_PREFIX + "verifyCode:";   // 验证码在redis中的key的前缀
     public static final String REDIS_KEY_TOKEN_WEB = REDIS_KEY_PREFIX + "token:web:";
+    public static final String REDIS_KEY_TOKEN_ADMIN = REDIS_KEY_PREFIX + "token:admin:";
     public static final String TOKEN_WEB_COOKIE_NAME = "token";
+    public static final String TOKEN_ADMIN_COOKIE_NAME = "adminToken";
 }

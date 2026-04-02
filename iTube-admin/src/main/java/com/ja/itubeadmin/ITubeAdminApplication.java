@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableScheduling
 public class ITubeAdminApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(ITubeAdminApplication.class, args);
     }

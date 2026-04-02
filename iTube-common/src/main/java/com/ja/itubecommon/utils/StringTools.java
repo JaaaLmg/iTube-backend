@@ -27,6 +27,7 @@ public class StringTools {
     }
 
     public static String encodeByMd5(String str) {
+        String temp = DigestUtils.md5DigestAsHex(str.getBytes());
     	return StringTools.isEmpty(str) ? null : DigestUtils.md5DigestAsHex(str.getBytes());
     }
 }
