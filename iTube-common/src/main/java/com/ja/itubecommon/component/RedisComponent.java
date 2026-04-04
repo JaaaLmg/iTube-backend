@@ -39,6 +39,10 @@ public class RedisComponent {
         return (TokenUserInfoDto) redisUtils.get(Constants.REDIS_KEY_TOKEN_WEB + token);
     }
 
+    public String getTokenInfo4Admin(String token) {
+        return (String) redisUtils.get(Constants.REDIS_KEY_TOKEN_ADMIN + token);
+    }
+
     public void deleteTokenInfo(String token) {
         redisUtils.delete(Constants.REDIS_KEY_TOKEN_WEB + token);
     }

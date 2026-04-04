@@ -1,4 +1,4 @@
-package com.ja.itubeadmin.controller;
+package com.ja.itubecommon.controller;
 
 import com.ja.itubecommon.entity.enums.ResponseCodeEnum;
 import com.ja.itubecommon.entity.vo.ResponseVO;
@@ -15,7 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice
-public class GlobalExceptionHandlerController extends BaseController {
+public class GlobalExceptionHandlerController {
+    private static final String STATUS_ERROR = "error";
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandlerController.class);
 
     @ExceptionHandler(value = Exception.class)

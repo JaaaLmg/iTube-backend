@@ -84,7 +84,7 @@ public class BaseController {
 
     protected void saveToken2Cookie(HttpServletResponse response,String token) {
         Cookie cookie = new Cookie(Constants.TOKEN_ADMIN_COOKIE_NAME, token);
-        cookie.setMaxAge(Constants.TIME_ONT_DAY_TO_SECOND);
+        cookie.setMaxAge(-1);   // -1表示关闭浏览器时失效
         cookie.setPath("/");
         response.addCookie(cookie);
     }
