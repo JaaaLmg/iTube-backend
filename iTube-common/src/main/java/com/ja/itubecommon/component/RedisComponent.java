@@ -2,10 +2,12 @@ package com.ja.itubecommon.component;
 
 import com.ja.itubecommon.entity.constants.Constants;
 import com.ja.itubecommon.entity.dto.TokenUserInfoDto;
+import com.ja.itubecommon.entity.po.CategoryInfo;
 import com.ja.itubecommon.redis.RedisUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -55,5 +57,9 @@ public class RedisComponent {
         String token = UUID.randomUUID().toString();
         redisUtils.setex(Constants.REDIS_KEY_TOKEN_ADMIN + token, account, Constants.REDIS_KEY_EXPIRE_ONE_DAY);
         return token;
+    }
+
+    public void saveCategoryInfoList(List<CategoryInfo> categoryInfoList) {
+        redisUtils.set(Constants.REDIS_KEY_CATEGORY_INFO, categoryInfoList);
     }
 }

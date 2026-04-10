@@ -5,6 +5,7 @@ import com.ja.itubecommon.entity.query.CategoryInfoQuery;
 import com.ja.itubecommon.entity.vo.ResponseVO;
 import com.ja.itubecommon.exception.BusinessException;
 import com.ja.itubecommon.service.CategoryInfoService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("category")
 public class CategoryController extends BaseController{
     @Resource
@@ -72,9 +74,4 @@ public class CategoryController extends BaseController{
         return getSuccessResponseVO(null);
     }
 
-
-//    @RequestMapping("file")
-//    public ResponseVO file() {
-//        return getSuccessResponseVO(null);
-//    }
 }

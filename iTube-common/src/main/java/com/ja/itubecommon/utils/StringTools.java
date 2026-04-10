@@ -30,4 +30,10 @@ public class StringTools {
         String temp = DigestUtils.md5DigestAsHex(str.getBytes());
     	return StringTools.isEmpty(str) ? null : DigestUtils.md5DigestAsHex(str.getBytes());
     }
+
+    public static boolean pathValidate(String path) {
+        if (StringTools.isEmpty(path)) return false;
+        if (path.contains("../") || path.contains("..\\")) return false;
+        return true;
+    }
 }

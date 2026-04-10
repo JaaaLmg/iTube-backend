@@ -1,5 +1,6 @@
 package com.ja.itubecommon.service.impl;
 
+import com.ja.itubecommon.component.RedisComponent;
 import com.ja.itubecommon.exception.BusinessException;
 import com.ja.itubecommon.mappers.CategoryInfoMapper;
 import com.ja.itubecommon.service.CategoryInfoService;
@@ -22,6 +23,9 @@ import java.util.List;
 public class CategoryInfoServiceImpl implements CategoryInfoService {
 	@Resource
 	private CategoryInfoMapper<CategoryInfo,CategoryInfoQuery> categoryInfoMapper;
+
+	@Resource
+	private RedisComponent redisComponent;
 
 	/**
 	 * 根据查询条件查询列表
@@ -140,7 +144,8 @@ public class CategoryInfoServiceImpl implements CategoryInfoService {
 		for (CategoryInfo child : children) {
 			RecursivelyDeleteCategoryInfoByCategoryId(child.getCategoryId());
 		}
-
+		// 刷新缓存
+		this.saveToRedis();
 		return this.deleteCategoryInfoByCategoryId(categoryId);
 	}
 
@@ -185,6 +190,8 @@ public class CategoryInfoServiceImpl implements CategoryInfoService {
 				this.categoryInfoMapper.updateByCategoryId(bean, bean.getCategoryId());
 			}
 		}
+		// 刷新缓存
+		this.saveToRedis();
 	}
 
 	@Override
@@ -200,6 +207,18 @@ public class CategoryInfoServiceImpl implements CategoryInfoService {
 			categoryInfoList.add(categoryInfo);
 		}
 		this.categoryInfoMapper.updateSort(categoryInfoList);
+		// 刷新缓存
+		this.saveToRedis();
+	}
+
+	/**
+	 * 更新缓存
+	 */
+	private void saveToRedis() {
+		CategoryInfoQuery query = new CategoryInfoQuery();
+		query.setOrderBy("sort asc");
+		List<CategoryInfo> categoryInfoList = this.queryListTree(query, 0);
+		redisComponent.saveCategoryInfoList(categoryInfoList);
 	}
 
 }

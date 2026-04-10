@@ -40,7 +40,10 @@ mybatis:
     map-underscore-to-camel-case: true
 
 project:
-  folder: d:/webserver/itube/
+  folder: d:/webserver/itube/     # 项目文件存放目录
+
+showFFmpegLog: true
+
 log:
   root:
     level: debug
